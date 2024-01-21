@@ -1,0 +1,5 @@
+git+https://github.com/srush/tangent
+triton
+torch
+pytest
+hypothesis
