@@ -1,2 +1,3 @@
-from op import *
+from __future__ import annotations
 
+from op import *

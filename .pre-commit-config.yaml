@@ -37,4 +37,3 @@ repos:
     -   id: mypy
         additional_dependencies: [types-all]
         exclude: ^testing/resources/
-
