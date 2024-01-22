@@ -7,6 +7,7 @@ from tangent.grads import adjoint
 import gast
 from io import StringIO
 import sys
+import torch
 
 tangent.utils.INIT_GRAD = tangent.quoting.quote("zeroslike")
 tangent.utils.ADD_GRAD = tangent.quoting.quote("add_grad")
@@ -138,3 +139,18 @@ def grad(forward, back, wrt=(0,)):
   newback = triton.JITFunction(back)
   newback.src = "\n".join(output)
   return newback
+
+def check(tr1, tr2, c, x_shape=(16,), y_shape=(32,), z_shape=(32, 16)):
+    x = torch.ones(*x_shape, requires_grad=True, device=torch.device(0))
+    y = torch.ones(*y_shape, requires_grad=True, device=torch.device(0))
+    z = torch.zeros(*z_shape).cuda()
+    tr1[(1,)](x, y, z)
+    z2 = c(x, y)
+    assert torch.allclose(z, z2)
+    z_grad = torch.rand(*z_shape).float().cuda()
+    x_grad_1, y_grad_1 = torch.autograd.grad([z2], [x, y], grad_outputs=[z_grad])
+    x_grad = torch.zeros(*x_shape).cuda()
+    y_grad = torch.zeros(*y_shape).cuda()
+    tr2[(1,)](x, y, x_grad, y_grad, z_grad)
+    assert torch.allclose(x_grad_1, x_grad)
+    assert torch.allclose(y_grad_1, y_grad)
