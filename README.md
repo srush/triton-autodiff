@@ -1,6 +1,6 @@
 # Triton-Autodiff
 
-<a href=\"https://colab.research.google.com/github/srush/triton-autodiff/blob/main/Triton_Autodiff.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>
+<a href="https://colab.research.google.com/github/srush/triton-autodiff/blob/main/Triton_Autodiff.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 
 This library is a proof-of-concept of autodifferentiation for [Triton](https://github.com/openai/triton/) GPU Code using the [Tangent](https://github.com/google/tangent) source-to-source compiler. Remarkably this project is only roughly [50 LoC](https://github.com/srush/triton-autodiff/blob/main/triton_autodiff/ops.py). 
