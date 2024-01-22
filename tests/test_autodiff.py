@@ -94,7 +94,7 @@ def ub1(X, Y):
   r = tl.arange(0, 16)
   r2 = tl.arange(0, 32)
   x = tl.load(X + 16 * r2[:, None] + r)
-  y = triton_unbroadcast(x, tl.arange(0, 16))
+  y = triton_unbroadcast(x, tl.arange(0, 16).shape)
   tl.store(Y + r, y)
 
 @triton.jit
@@ -102,7 +102,7 @@ def ub2(X, Y):
   r = tl.arange(0, 16)
   r2 = tl.arange(0, 32)
   x = tl.load(X + 16 * r2[:, None] + r)
-  y = triton_unbroadcast(x, tl.arange(0, 32)[:, None])
+  y = triton_unbroadcast(x, tl.arange(0, 32)[:, None].shape)
   tl.store(Y + r2[:, None], y)
 
 
@@ -135,7 +135,7 @@ def dcomp2dx(x, b_return):
     b_return2 = zeroslike(_return2)
 
     # Grad of: _return = _return2 * x
-    _b_return2 = triton_unbroadcast(b_return * x, _return2)
+    _b_return2 = triton_unbroadcast(b_return * x, _return2.shape)
     # _bx2 = triton_unbroadcast(b_return * _return2, x)
     # b_return2 = add_grad(b_return2, _b_return2)
     # bx = add_grad(bx, _bx2)
@@ -156,7 +156,7 @@ def tr1(X, Y):
 @triton.jit
 def tr2(X, dX, dY):
   r = tl.arange(0, 16)
-  
+
   r2 = tl.arange(0, 16)[:, None]
   x = tl.load(X + r)
   dy = tl.load(dY + 16 * r2 + r)
